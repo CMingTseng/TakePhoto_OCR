@@ -1,7 +1,5 @@
 package ocr.com;
 
-////要把tesseract給import才可以OCR
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -34,8 +32,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
 
+import idv.neo.utils.BitmapUtils;
+import idv.neo.widget.Guides;
+
+//http://mjbb.iteye.com/blog/1018006
 public class MotorScan extends Activity implements SurfaceHolder.Callback {
-    private static String TAG = "ScanBarZBarActivity";
+    private static String TAG = "MotorScan";
     private Camera mCamera;
     private ImageButton cameraImgBtn01;
     //	private ImageButton camImgBtn01;
@@ -47,9 +49,6 @@ public class MotorScan extends Activity implements SurfaceHolder.Callback {
     private Bitmap bmp, bmpt;
     private int cnt = 1;
     private Calendar c;
-    private ImageView imageView1, img002;
-
-    public native String getISBN(Bitmap bmp);
 
     Guides mGuides;//畫線
     private File sdcardTempFile;
@@ -75,7 +74,7 @@ public class MotorScan extends Activity implements SurfaceHolder.Callback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera1);
 //-------呼叫Guides class 對 指定layout 作 addView(mGuides)畫框框---------------------
-        mGuides = new Guides(this, "");
+        mGuides = new Guides(this);
         ((RelativeLayout) findViewById(R.id.camerarl02)).addView(mGuides);
         mGuides.getLayoutParams().width = LayoutParams.FILL_PARENT;
         mGuides.getLayoutParams().height = LayoutParams.FILL_PARENT;
@@ -85,9 +84,7 @@ public class MotorScan extends Activity implements SurfaceHolder.Callback {
         holder = mSurfaceView.getHolder();
         holder.addCallback(MotorScan.this);
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-
         c = Calendar.getInstance();
-
         //--------- Button初始化---------------------------------------------------
         cameraImgBtn01 = (ImageButton) findViewById(R.id.cameraImgBtn01);
         cameraImgBtn01.setOnClickListener(CameraBtn01Click);
@@ -107,8 +104,7 @@ public class MotorScan extends Activity implements SurfaceHolder.Callback {
     /**
      * 當自動對焦時候調用
      */
-    public final class AutoFocusCallback implements
-            android.hardware.Camera.AutoFocusCallback {
+    public final class AutoFocusCallback implements android.hardware.Camera.AutoFocusCallback {
         public void onAutoFocus(boolean focused, Camera camera) {
             /* 對到焦點拍照 */
             if (focused) {
@@ -161,7 +157,6 @@ public class MotorScan extends Activity implements SurfaceHolder.Callback {
      * 直接儲存並切換至picture.class 並將裁切好之圖片存為camera2.jpg
      */
     private void btn2() {
-        // TODO Auto-generated method stub
         Log.i(TAG, "click button2");
         if (bmp != null) {
 		/* 檢查SDCard是否存在 */
@@ -192,7 +187,6 @@ public class MotorScan extends Activity implements SurfaceHolder.Callback {
 				/* 結束OutputStream */
                     bos.close();
                     //Toast.makeText(MotorScan.this,path1 + "保存成功!", Toast.LENGTH_LONG).show();
-                    imageView1.setVisibility(View.GONE);
                     cnt++;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -206,10 +200,7 @@ public class MotorScan extends Activity implements SurfaceHolder.Callback {
         //bitmap 設置圖片尺寸，避免 記憶體溢出 OutOfMemoryError的優化方法
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 2;
-
-
         bmpt = BitmapFactory.decodeFile(sdcardTempFile.getAbsolutePath());
-
         int w = bmpt.getWidth();
         int h = bmpt.getHeight();
         int[] pixels = new int[w * h];
@@ -240,7 +231,6 @@ public class MotorScan extends Activity implements SurfaceHolder.Callback {
             fos.close();
         } catch (IOException e) {
         }
-
         ocrHandler = new Handler() {
 
             @Override
@@ -298,7 +288,7 @@ public class MotorScan extends Activity implements SurfaceHolder.Callback {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                bitmapTreated = ImgPretreatment.converyToGrayImg(bitmapSelected);
+                bitmapTreated = BitmapUtils.converyToGrayImg(bitmapSelected);
                 Message msg = new Message();
                 msg.what = SHOWTREATEDIMG;
                 ocrHandler.sendMessage(msg);
