@@ -1,4 +1,4 @@
-package ocr.com;
+package ocr.com.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -34,10 +34,11 @@ import java.util.Calendar;
 
 import idv.neo.utils.BitmapUtils;
 import idv.neo.widget.Guides;
+import ocr.com.R;
 
 //http://mjbb.iteye.com/blog/1018006
-public class MotorScan extends Activity implements SurfaceHolder.Callback {
-    private static String TAG = "MotorScan";
+public class MotorScanActivity extends Activity implements SurfaceHolder.Callback {
+    private static String TAG = "MotorScanActivity";
     private Camera mCamera;
     private ImageButton cameraImgBtn01;
     //	private ImageButton camImgBtn01;
@@ -52,7 +53,7 @@ public class MotorScan extends Activity implements SurfaceHolder.Callback {
 
     Guides mGuides;//畫線
     private File sdcardTempFile;
-    private static final String LOGGER = MotorScan.class.getName();
+    private static final String LOGGER = MotorScanActivity.class.getName();
     //OCR處理部分
     public static Handler ocrHandler;
     private static String LANGUAGE = "eng";
@@ -82,7 +83,7 @@ public class MotorScan extends Activity implements SurfaceHolder.Callback {
 //--------- SurfaceHolder設定---------------------------------------------------
         mSurfaceView = (SurfaceView) findViewById(R.id.mSurfaceView);
         holder = mSurfaceView.getHolder();
-        holder.addCallback(MotorScan.this);
+        holder.addCallback(MotorScanActivity.this);
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         c = Calendar.getInstance();
         //--------- Button初始化---------------------------------------------------
@@ -163,7 +164,7 @@ public class MotorScan extends Activity implements SurfaceHolder.Callback {
             if (!Environment.MEDIA_MOUNTED.equals(Environment
                     .getExternalStorageState())) {
 			/* SD卡不存在，顯示Toast資訊 */
-                Toast.makeText(MotorScan.this,
+                Toast.makeText(MotorScanActivity.this,
                         "SD卡不存在!無法保存相片,請插入SD卡。", Toast.LENGTH_LONG)
                         .show();
             } else {
@@ -186,7 +187,7 @@ public class MotorScan extends Activity implements SurfaceHolder.Callback {
                     bos.flush();
 				/* 結束OutputStream */
                     bos.close();
-                    //Toast.makeText(MotorScan.this,path1 + "保存成功!", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(MotorScanActivity.this,path1 + "保存成功!", Toast.LENGTH_LONG).show();
                     cnt++;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -328,7 +329,7 @@ public class MotorScan extends Activity implements SurfaceHolder.Callback {
             Intent intent = new Intent();
             String str = etResult.getText().toString();
             intent.putExtra("MotorID", str);
-            intent.setClass(MotorScan.this, Main.class);
+            intent.setClass(MotorScanActivity.this, MainActivity.class);
             startActivity(intent);
         }
     };
@@ -340,7 +341,7 @@ public class MotorScan extends Activity implements SurfaceHolder.Callback {
 
         @Override
         public void onClick(View v) {
-            MotorScan.this.finish();
+            MotorScanActivity.this.finish();
         }
     };
 

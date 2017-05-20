@@ -1,9 +1,13 @@
-package ocr.com;
+package ocr.com.fragment;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -13,25 +17,32 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class Main extends Activity {
+import ocr.com.R;
+
+/**
+ * Created by Neo on 2017/5/21.
+ */
+
+public class MainFragment extends Fragment {
+    private static final String TAG = MainFragment.class.getSimpleName();
     private Intent intent = new Intent();
     private Button button1;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        intent = this.getIntent();
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        final Context context = container.getContext();
+        final View root = inflater.inflate(R.layout.fragment_main, container, false);
+        intent = getActivity().getIntent();
         String MotorID = intent.getStringExtra("MotorID");
-        button1 = (Button) findViewById(R.id.bt001);
+        button1 = (Button) root.findViewById(R.id.bt001);
 
-        Toast.makeText(getApplicationContext(), MotorID, 1000).show();
+        Toast.makeText(context, MotorID, Toast.LENGTH_LONG).show();
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent();
-                it.setClass(Main.this, MotorScan.class);
-                startActivity(it);
+//                Intent it = new Intent();
+//                it.setClass(context, MotorScanActivity.class);
+//                startActivity(it);
             }
         });
 
@@ -50,7 +61,7 @@ public class Main extends Activity {
                 if (!file.exists()) {
                     file.createNewFile();
                 }
-                InputStream is = this.getApplicationContext().getResources().openRawResource(R.raw.eng);
+                InputStream is = context.getResources().openRawResource(R.raw.eng);
                 FileOutputStream fos = new FileOutputStream(file);
                 byte[] buffere = new byte[is.available()];
                 is.read(buffere);
@@ -63,5 +74,6 @@ public class Main extends Activity {
                 e.printStackTrace();
             }
         }
+        return root;
     }
 }
