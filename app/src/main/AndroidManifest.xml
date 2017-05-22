@@ -30,13 +30,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".activity.MotorScanActivity"
-            android:screenOrientation="landscape"
-            android:configChanges="orientation"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
     </application>
 
 </manifest>

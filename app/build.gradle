@@ -9,6 +9,10 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+        buildConfigField 'String', 'OCRPHOTOFOLDER', '"OCR-Photo"'
+        buildConfigField 'String', 'TEMPPHOTOFILE', '"camera.jpg"'
+        buildConfigField 'String', 'OCRPHOTOFILE', '"camera2.jpg"'
+        buildConfigField 'String', 'OCRTESTDATAFOLDER', '"tessdata"'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
